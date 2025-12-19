@@ -9,3 +9,7 @@ services:
         value: "3.11"
       - key: MONGODB_URI
         sync: false
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: TZ
+        value: "Asia/Kolkata"

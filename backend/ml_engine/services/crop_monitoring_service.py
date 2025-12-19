@@ -285,6 +285,52 @@ class CropMonitoringService:
                     pest_focus = []
                     disease_focus = []
         
+        # If no stage matched or crop not found, use generic stages based on duration
+        if not current_stage:
+            # Check for generic fallback
+            duration = crop_data.get('duration_days', 120)
+            progress = min(1.0, max(0.0, days_after_sowing / duration))
+            
+            if progress < 0.20:
+                current_stage = "germination"
+                stage_name = "Germination & Establishment"
+                stage_name_te = "మొలకెత్తడం & స్థాపన"
+                current_activities = [
+                    {'task': 'Ensure moist soil for germination', 'priority': 'high'},
+                    {'task': 'Protect from birds and pests', 'priority': 'medium'}
+                ]
+            elif progress < 0.50:
+                current_stage = "vegetative"
+                stage_name = "Vegetative Growth"
+                stage_name_te = "శాఖీయ పెరుగుదల"
+                current_activities = [
+                    {'task': 'Weeding and intercultural operations', 'priority': 'medium'},
+                    {'task': 'Monitor for early pest attacks', 'priority': 'medium'},
+                    {'task': 'Apply top dressing fertilizer', 'priority': 'high'}
+                ]
+            elif progress < 0.80:
+                current_stage = "reproductive"
+                stage_name = "Flowering & Fruiting"
+                stage_name_te = "పూత & కాయ"
+                current_activities = [
+                    {'task': 'Critical stage: Maintain moisture', 'priority': 'high'},
+                    {'task': 'Monitor for fruit boers/diseases', 'priority': 'high'}
+                ]
+            else:
+                current_stage = "maturity"
+                stage_name = "Maturity & Harvest"
+                stage_name_te = "పక్వత & కోత"
+                current_activities = [
+                    {'task': 'Stop irrigation before harvest', 'priority': 'high'},
+                    {'task': 'Prepare for harvesting', 'priority': 'medium'}
+                ]
+            
+            # Set stage day ranges roughly
+            stage_day_start = days_after_sowing
+            stage_day_end = days_after_sowing + 10
+            pest_focus = []
+            disease_focus = []
+            
         # Calculate progress
         progress_percent = min(100, round((days_after_sowing / total_duration) * 100))
         
