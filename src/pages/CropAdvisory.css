@@ -632,82 +632,208 @@
 
 /* === MOBILE-FIRST RESPONSIVE FIXES === */
 @media (max-width: 480px) {
+
+    /* Base containers */
+    .advisory-app {
+        padding-bottom: 60px;
+    }
+
     .content-area {
-        padding: 12px;
+        padding: 10px;
     }
 
     .step-container {
-        padding: 14px;
+        padding: 12px;
+        border-radius: 12px;
     }
 
     .step-container h2 {
-        font-size: 16px;
+        font-size: 15px;
     }
 
-    .context-row {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-    }
-
-    .context-chip {
-        padding: 8px 4px;
-    }
-
-    .context-chip .value {
-        font-size: 11px;
-    }
-
-    .params-row {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 4px;
-    }
-
-    .param-chip {
-        padding: 6px 4px;
-    }
-
-    .param-chip .label {
-        font-size: 9px;
-    }
-
-    .param-chip .value {
+    .step-desc {
         font-size: 12px;
     }
 
+    .step-icon {
+        font-size: 36px;
+    }
+
+    /* Context chips */
+    .context-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4px;
+    }
+
+    .context-chip {
+        padding: 6px 3px;
+    }
+
+    .context-chip .icon {
+        font-size: 14px;
+    }
+
+    .context-chip .label {
+        font-size: 8px;
+    }
+
+    .context-chip .value {
+        font-size: 10px;
+    }
+
+    /* Soil params */
+    .params-row {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3px;
+    }
+
+    .param-chip {
+        padding: 5px 3px;
+    }
+
+    .param-chip .label {
+        font-size: 8px;
+    }
+
+    .param-chip .value {
+        font-size: 11px;
+    }
+
+    /* Crop cards */
+    .crop-list {
+        gap: 8px;
+    }
+
     .crop-card {
-        padding: 12px;
+        padding: 10px;
+        border-radius: 12px;
     }
 
     .crop-icon {
-        font-size: 28px;
+        font-size: 24px;
     }
 
     .crop-name {
-        font-size: 14px;
-    }
-
-    .crop-score {
-        font-size: 16px;
-    }
-
-    .button-row {
-        flex-wrap: wrap;
-    }
-
-    .gps-btn {
-        padding: 10px 12px;
         font-size: 13px;
     }
 
+    .crop-meta {
+        gap: 4px;
+    }
+
+    .crop-meta .tag {
+        font-size: 9px;
+        padding: 2px 4px;
+    }
+
+    .crop-score {
+        font-size: 14px;
+        min-width: 36px;
+    }
+
+    /* Buttons */
+    .button-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .gps-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+        flex: 1;
+    }
+
     .search-btn {
-        padding: 10px 14px;
+        padding: 8px 12px;
+        font-size: 13px;
+        flex: 2;
+    }
+
+    /* Week cards */
+    .week-card {
+        padding: 12px;
+        margin-bottom: 8px;
+        border-radius: 12px;
+    }
+
+    .week-title {
         font-size: 14px;
     }
 
-    /* Force word-wrap on all text elements */
-    .step-container * {
+    .week-range {
+        font-size: 10px;
+    }
+
+    .week-summary {
+        font-size: 12px;
+    }
+
+    .week-content {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+
+    /* Task items */
+    .task-item {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    /* Advisory header card */
+    .advisory-crop-header {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .advisory-crop-header h2 {
+        font-size: 14px !important;
+    }
+
+    /* Info cards */
+    .info-card {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .info-card .card-title {
+        font-size: 13px;
+    }
+
+    /* Crop header card */
+    .crop-header-card {
+        padding: 14px;
+    }
+
+    .crop-header-card h2 {
+        font-size: 18px;
+    }
+
+    /* Force word-wrap everywhere */
+    .step-container *,
+    .crop-card *,
+    .week-card *,
+    .info-card *,
+    .advisory-crop-header * {
         word-wrap: break-word;
         overflow-wrap: break-word;
+        max-width: 100%;
+    }
+
+    /* Prevent horizontal overflow */
+    .advisory-app,
+    .content-area,
+    .step-container,
+    .crop-card,
+    .week-card,
+    .info-card {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    /* Back link */
+    .back-link {
+        font-size: 13px;
+        padding: 8px 0;
     }
 }
 
