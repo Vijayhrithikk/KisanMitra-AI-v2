@@ -9,6 +9,8 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.9"
+      - key: MONGODB_URI
+        sync: false
       - key: OPENWEATHER_KEY
         sync: false
       - key: TWILIO_ACCOUNT_SID
