@@ -1,0 +1,24 @@
+services:
+  # ML Engine (FastAPI)
+  - type: web
+    name: kisanmitra-ml
+    runtime: python
+    rootDir: backend/ml_engine
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+
+  # Marketplace API (Flask)
+  - type: web
+    name: kisanmitra-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn marketplace_api:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"
+      - key: MONGODB_URI
+        sync: false
