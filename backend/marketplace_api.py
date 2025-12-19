@@ -7,6 +7,23 @@ Run on port 5000
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import database as db
+import os
+import uuid
+import hmac
+import hashlib
+from datetime import datetime
+
+# Razorpay SDK
+try:
+    import razorpay
+    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_RtY3DP4HEeNptd')
+    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'f3rBpxA4k0eU5RRqsy2pnk88')
+    razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+    print("✅ Razorpay client initialized")
+except ImportError:
+    razorpay_client = None
+    RAZORPAY_KEY_ID = None
+    print("⚠️ Razorpay SDK not installed")
 
 app = Flask(__name__)
 CORS(app)
@@ -182,6 +199,95 @@ def search_transaction(tx_hash):
     if transaction:
         return jsonify(transaction)
     return jsonify({'error': 'Transaction not found'}), 404
+
+# ==================== RAZORPAY PAYMENT ENDPOINTS ====================
+
+@app.route('/api/payments/create-order', methods=['POST'])
+def create_razorpay_order():
+    """Create a Razorpay order for payment"""
+    if not razorpay_client:
+        return jsonify({'error': 'Payment gateway not configured'}), 500
+    
+    try:
+        data = request.json
+        amount = int(data.get('amount', 0))  # Amount in paise
+        currency = data.get('currency', 'INR')
+        receipt = data.get('receipt', f'order_{uuid.uuid4().hex[:8]}')
+        notes = data.get('notes', {})
+        
+        if amount <= 0:
+            return jsonify({'error': 'Invalid amount'}), 400
+        
+        # Create Razorpay order
+        order_data = {
+            'amount': amount,
+            'currency': currency,
+            'receipt': receipt,
+            'notes': notes
+        }
+        
+        razorpay_order = razorpay_client.order.create(data=order_data)
+        
+        return jsonify({
+            'success': True,
+            'order_id': razorpay_order['id'],
+            'amount': razorpay_order['amount'],
+            'currency': razorpay_order['currency'],
+            'key_id': RAZORPAY_KEY_ID
+        })
+        
+    except Exception as e:
+        print(f"❌ Razorpay order creation error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/payments/verify', methods=['POST'])
+def verify_razorpay_payment():
+    """Verify Razorpay payment signature"""
+    if not razorpay_client:
+        return jsonify({'error': 'Payment gateway not configured'}), 500
+    
+    try:
+        data = request.json
+        razorpay_order_id = data.get('razorpay_order_id')
+        razorpay_payment_id = data.get('razorpay_payment_id')
+        razorpay_signature = data.get('razorpay_signature')
+        order_id = data.get('order_id')
+        order_type = data.get('order_type', 'marketplace')
+        
+        if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
+            return jsonify({'error': 'Missing payment details'}), 400
+        
+        # Verify signature
+        msg = razorpay_order_id + "|" + razorpay_payment_id
+        generated_signature = hmac.new(
+            RAZORPAY_KEY_SECRET.encode(),
+            msg.encode(),
+            hashlib.sha256
+        ).hexdigest()
+        
+        if generated_signature != razorpay_signature:
+            return jsonify({'error': 'Invalid signature', 'verified': False}), 400
+        
+        # Payment verified - update order status
+        if order_id:
+            db.update_order_payment(order_id, {
+                'status': 'PAID',
+                'razorpay_payment_id': razorpay_payment_id,
+                'razorpay_order_id': razorpay_order_id,
+                'paid_at': datetime.now().isoformat()
+            })
+        
+        return jsonify({
+            'success': True,
+            'verified': True,
+            'payment_id': razorpay_payment_id,
+            'message': 'Payment verified successfully'
+        })
+        
+    except Exception as e:
+        print(f"❌ Payment verification error: {e}")
+        return jsonify({'error': str(e), 'verified': False}), 500
 
 # ==================== RUN ====================
 

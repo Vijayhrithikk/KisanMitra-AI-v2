@@ -214,6 +214,19 @@ def update_order_status(order_id, status, additional_data=None):
     return result.modified_count > 0
 
 
+def update_order_payment(order_id, payment_data):
+    """Update order payment status (for Razorpay)"""
+    update = {
+        'payment': payment_data,
+        'updatedAt': datetime.utcnow()
+    }
+    result = orders_collection.update_one(
+        {'orderId': order_id},
+        {'$set': update}
+    )
+    return result.modified_count > 0
+
+
 # ==================== USERS ====================
 
 def create_user(user_data):
