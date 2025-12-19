@@ -259,9 +259,7 @@ const LoginPage = () => {
                                 {loading ? 'Logging in...' : t('login.login', 'Login')}
                                 <ArrowRight size={18} />
                             </button>
-                            <small className="demo-hint">
-                                Demo: admin@kisanmitra.com / admin123
-                            </small>
+
                         </form>
                     </div>
                 )}
