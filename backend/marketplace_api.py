@@ -158,6 +158,29 @@ def create_guest_order():
         print(f"❌ Guest order error: {e}")
         return jsonify({'error': str(e)}), 500
 
+
+@app.route('/api/orders/<order_id>/cancel', methods=['POST'])
+def cancel_order(order_id):
+    """Cancel an unpaid order (used when payment fails)"""
+    try:
+        data = request.json
+        reason = data.get('reason', 'Payment cancelled')
+        
+        # Update order status to CANCELLED
+        success = db.update_order_status(order_id, 'CANCELLED', {
+            'cancellation_reason': reason,
+            'cancelled_at': datetime.now().isoformat()
+        })
+        
+        if success:
+            print(f"❌ Order {order_id} cancelled: {reason}")
+            return jsonify({'message': 'Order cancelled', 'orderId': order_id})
+        else:
+            return jsonify({'error': 'Order not found'}), 404
+    except Exception as e:
+        print(f"❌ Cancel order error: {e}")
+        return jsonify({'error': str(e)}), 500
+
 # ==================== USERS ENDPOINTS ====================
 
 @app.route('/api/users', methods=['POST'])
@@ -276,7 +299,7 @@ def verify_razorpay_payment():
         if generated_signature != razorpay_signature:
             return jsonify({'error': 'Invalid signature', 'verified': False}), 400
         
-        # Payment verified - update order status
+        # Payment verified - update order payment status AND order status
         if order_id:
             db.update_order_payment(order_id, {
                 'status': 'PAID',
@@ -284,6 +307,8 @@ def verify_razorpay_payment():
                 'razorpay_order_id': razorpay_order_id,
                 'paid_at': datetime.now().isoformat()
             })
+            # Also update order status from PAYMENT_PENDING to PLACED
+            db.update_order_status(order_id, 'PLACED')
         
         return jsonify({
             'success': True,

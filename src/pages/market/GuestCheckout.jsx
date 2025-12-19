@@ -92,7 +92,8 @@ const GuestCheckout = () => {
         setLoading(true);
 
         try {
-            // Create order with full data
+            // For online payment, create order with PAYMENT_PENDING status
+            // For COD, create order with PLACED status
             const orderData = {
                 type: 'guest',
                 buyerType: formData.buyerType,
@@ -133,7 +134,8 @@ const GuestCheckout = () => {
                     status: paymentMethod === 'PAY_ONLINE' ? 'PENDING' : 'COD'
                 },
                 notes: formData.notes,
-                status: 'PLACED'
+                // Use PAYMENT_PENDING for online payments, PLACED for COD
+                status: paymentMethod === 'PAY_ONLINE' ? 'PAYMENT_PENDING' : 'PLACED'
             };
 
             const response = await fetch(`${API_BASE}/orders/guest`, {
@@ -155,18 +157,30 @@ const GuestCheckout = () => {
                             { name: formData.name, phone: formData.phone }
                         );
 
-                        // Payment successful
+                        // Payment successful and verified - now mark order as PLACED
                         console.log('✅ Payment successful:', paymentResult);
                         setOrderId(result.orderId);
                         setOrderPlaced(true);
                         clearCart();
                     } catch (paymentError) {
-                        console.error('Payment error:', paymentError);
-                        alert(paymentError.message || 'Payment failed. Order saved as unpaid.');
-                        // Still show order but as unpaid
-                        setOrderId(result.orderId);
-                        setOrderPlaced(true);
-                        clearCart();
+                        console.error('Payment cancelled or failed:', paymentError);
+
+                        // Cancel the pending order since payment failed
+                        try {
+                            await fetch(`${API_BASE}/orders/${result.orderId}/cancel`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ reason: paymentError.message || 'Payment cancelled by user' })
+                            });
+                        } catch (cancelError) {
+                            console.error('Failed to cancel order:', cancelError);
+                        }
+
+                        // Show error and DO NOT mark as order placed
+                        alert(lang === 'te'
+                            ? 'చెల్లింపు రద్దు చేయబడింది. దయచేసి మళ్ళీ ప్రయత్నించండి.'
+                            : 'Payment was cancelled. Please try again.');
+                        // Do NOT set orderPlaced to true or clear cart
                     }
                 } else {
                     // COD - just show success
