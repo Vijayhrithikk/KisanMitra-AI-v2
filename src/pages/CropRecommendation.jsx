@@ -168,25 +168,67 @@ const CropRecommendation = () => {
                 // Reverse geocode to get place name
                 try {
                     const API_KEY = 'dd587855fbdac207034b854ea3e03c00';
-                    const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`);
+                    const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=5&appid=${API_KEY}`);
                     const data = await res.json();
+
+                    console.log('Reverse geocode response:', data);
 
                     if (data && data.length > 0) {
                         const place = data[0];
-                        const locationName = place.local_names?.te || place.name || 'Your Location';
-                        const fullLocation = place.state ? `${locationName}, ${place.state}` : locationName;
-                        setLocationQuery(fullLocation);
+                        console.log('Place details:', place);
 
-                        // Auto-search with the location
-                        setTimeout(() => {
-                            handleSearch(null, fullLocation, null, { lat, lon });
-                        }, 100);
+                        // Try to get the best location name with multiple fallbacks
+                        let locationName = null;
+
+                        // Priority 1: Telugu local name if in Telugu mode
+                        if (lang === 'te' && place.local_names && place.local_names.te) {
+                            locationName = place.local_names.te;
+                        }
+                        // Priority 2: English name
+                        else if (place.name && place.name.length > 0) {
+                            locationName = place.name;
+                        }
+                        // Priority 3: Any local name available
+                        else if (place.local_names) {
+                            const localNames = Object.values(place.local_names);
+                            if (localNames.length > 0) {
+                                locationName = localNames[0];
+                            }
+                        }
+
+                        // Build the full location string
+                        if (locationName) {
+                            // Add state/district for context
+                            let fullLocation = locationName;
+                            if (place.state && place.state !== locationName) {
+                                fullLocation = `${locationName}, ${place.state}`;
+                            }
+
+                            console.log('Setting location to:', fullLocation);
+                            setLocationQuery(fullLocation);
+
+                            // Auto-search with the location
+                            setTimeout(() => {
+                                handleSearch(null, fullLocation, null, { lat, lon });
+                            }, 100);
+                        } else {
+                            // Fallback: Use state if available, otherwise use "Your Location"
+                            const fallbackName = place.state || 'Your Location';
+                            console.log('Using fallback location:', fallbackName);
+                            setLocationQuery(fallbackName);
+
+                            setTimeout(() => {
+                                handleSearch(null, fallbackName, null, { lat, lon });
+                            }, 100);
+                        }
                     } else {
+                        console.warn('No geocode results, using coordinates');
                         setLocationQuery(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
                     }
                 } catch (err) {
                     console.error('Reverse geocoding failed:', err);
-                    setLocationQuery(`${lat.toFixed(4)}, ${lon.toFixed(4)}`);
+                    // Even on error, try to proceed with a generic location
+                    setLocationQuery(lang === 'te' ? 'మీ ప్రాంతం' : 'Your Location');
                 }
 
                 setGettingLocation(false);
