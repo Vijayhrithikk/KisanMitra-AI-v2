@@ -18,6 +18,12 @@ const LanguageSelector = () => {
                 English
             </button>
             <button
+                className={`lang-btn ${i18n.language === 'hi' ? 'active' : ''}`}
+                onClick={() => changeLanguage('hi')}
+            >
+                हिंदी
+            </button>
+            <button
                 className={`lang-btn ${i18n.language === 'te' ? 'active' : ''}`}
                 onClick={() => changeLanguage('te')}
             >
@@ -28,3 +34,4 @@ const LanguageSelector = () => {
 };
 
 export default LanguageSelector;
+
