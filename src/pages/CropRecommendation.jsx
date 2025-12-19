@@ -16,8 +16,7 @@ import {
     ScenarioResult,
     ConfidenceMetadata
 } from '../components/DecisionIntelligence';
-
-const ML_API_URL = import.meta.env.VITE_ML_API_URL || 'http://localhost:8001';
+import { ML_API_URL } from '../config/api';
 
 const CropRecommendation = () => {
     const { t, i18n } = useTranslation();
@@ -169,7 +168,7 @@ const CropRecommendation = () => {
                 // Reverse geocode to get place name
                 try {
                     const API_KEY = 'dd587855fbdac207034b854ea3e03c00';
-                    const res = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`);
+                    const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${API_KEY}`);
                     const data = await res.json();
 
                     if (data && data.length > 0) {
@@ -341,7 +340,7 @@ const CropRecommendation = () => {
             if (!lat || !lon) {
                 try {
                     const API_KEY = 'dd587855fbdac207034b854ea3e03c00';
-                    const geoRes = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=1&appid=${API_KEY}`);
+                    const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=1&appid=${API_KEY}`);
                     const geoData = await geoRes.json();
                     if (geoData && geoData.length > 0) {
                         lat = geoData[0].lat;
@@ -375,6 +374,12 @@ const CropRecommendation = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Server error (${res.status}): ${errorText.substring(0, 100)}`);
+            }
+
             const data = await res.json();
             console.log("Recommend Response:", data);
             setRecommendations(data);
@@ -387,8 +392,11 @@ const CropRecommendation = () => {
             }
 
         } catch (err) {
-            console.error(err);
-            alert(lang === 'te' ? "సేవ అందుబాటులో లేదు. దయచేసి మళ్ళీ ప్రయత్నించండి." : "Service unavailable. Please try again.");
+            console.error("Search Error:", err);
+            const msg = lang === 'te'
+                ? "సేవ అందుబాటులో లేదు. సలహా: దయచేసి 1 నిమిషం ఆగి మళ్ళీ ప్రయత్నించండి (సర్వర్ నిద్రలేస్తోంది)."
+                : `Service unavailable: ${err.message || 'Check connection'}. Tip: Wait 1 min for server to wake up.`;
+            alert(msg);
         } finally {
             setLoading(false);
         }

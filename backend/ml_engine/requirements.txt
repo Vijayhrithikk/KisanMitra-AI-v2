@@ -9,3 +9,4 @@ tensorflow
 pillow
 numpy
 python-multipart
+beautifulsoup4

@@ -57,7 +57,7 @@ app = FastAPI(title="KisanMitra ML Engine", version="2.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -246,11 +246,9 @@ async def recommend_crops(request: LocationRequest):
             try:
                 from services.soil_research_agent import SoilResearchAgent
                 agent = SoilResearchAgent()
-                researched = agent.research_region(
-                    district, 
-                    mandal, 
-                    lat=request.lat, 
-                    lon=request.lon
+                researched = agent.research_soil(
+                    region=mandal or district,
+                    district=district
                 )
                 if researched:
                     soil_info = researched

@@ -8,7 +8,8 @@ import {
 import LanguageSelector from '../components/LanguageSelector';
 import './CropAdvisory.css';
 
-const API_BASE = import.meta.env.VITE_ML_API_URL || 'http://localhost:8001';
+import { ML_API_URL } from '../config/api';
+const API_BASE = ML_API_URL;
 
 const CropAdvisory = () => {
     const { i18n } = useTranslation();
@@ -95,7 +96,7 @@ const CropAdvisory = () => {
             async (pos) => {
                 setCoords({ lat: pos.coords.latitude, lon: pos.coords.longitude });
                 try {
-                    const res = await fetch(`http://api.openweathermap.org/geo/1.0/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&limit=1&appid=dd587855fbdac207034b854ea3e03c00`);
+                    const res = await fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&limit=1&appid=dd587855fbdac207034b854ea3e03c00`);
                     const data = await res.json();
                     if (data?.[0]?.name) {
                         setLocationQuery(data[0].name);

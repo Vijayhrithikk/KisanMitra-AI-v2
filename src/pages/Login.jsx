@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Sprout, ArrowRight, Loader2, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { MARKET_API_URL } from '../config/api';
 import LanguageSelector from '../components/LanguageSelector';
 import './Login.css';
 
@@ -36,19 +37,20 @@ const Login = () => {
 
             try {
                 // Check if farmer exists in MongoDB database
-                const response = await fetch(`${import.meta.env.VITE_MARKET_API_URL || 'http://localhost:5000/api'}/users/phone/${phone}`);
+                const response = await fetch(`${MARKET_API_URL}/users/phone/${phone}`);
                 const data = await response.json();
 
-                if (data.exists && data.user) {
+                if (data && !data.error && (data.userId || data.phone || data._id)) {
                     // Farmer exists in database - log them in
+                    const user = data;
                     const farmerSession = {
-                        id: data.user._id || data.user.id || `FARMER-${phone.slice(-4)}`,
+                        id: user._id || user.id || user.userId || `FARMER-${phone.slice(-4)}`,
                         role: 'farmer',
                         phone: phone,
                         phoneNumber: phone,
-                        farmerId: data.user.farmerId || `FARMER-${phone.slice(-4)}`,
-                        name: data.user.name || `Farmer ${phone.slice(-4)}`,
-                        verified: data.user.verified || true,
+                        farmerId: user.farmerId || user.userId || `FARMER-${phone.slice(-4)}`,
+                        name: user.name || `Farmer ${phone.slice(-4)}`,
+                        verified: user.verified ?? true,
                         loginAt: new Date().toISOString()
                     };
 
