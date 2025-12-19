@@ -287,10 +287,438 @@
     border: 1px solid #E5E7EB;
 }
 
+/* === STEP CONTAINER === */
+.step-container {
+    background: white;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.step-container h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2937;
+    margin: 0 0 16px 0;
+    text-align: center;
+}
+
+.step-desc {
+    font-size: 14px;
+    color: #6B7280;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.step-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+/* === LOCATION FORM === */
+.location-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    background: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+}
+
+.input-row input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #1F2937;
+    min-width: 0;
+}
+
+.input-row input::placeholder {
+    color: #9CA3AF;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+}
+
+.gps-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 10px;
+    color: #1D4ED8;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.search-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #16A34A, #15803D);
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.search-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* === CONTEXT ROW === */
+.context-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.context-chip {
+    background: #F9FAFB;
+    border-radius: 10px;
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #F3F4F6;
+}
+
+.context-chip .icon {
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.context-chip .label {
+    font-size: 10px;
+    color: #6B7280;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.context-chip .value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1F2937;
+    word-break: break-word;
+}
+
+/* === SOIL PARAMS CARD === */
+.soil-params-card {
+    background: linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #86EFAC;
+}
+
+.soil-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.soil-type {
+    font-size: 14px;
+    font-weight: 600;
+    color: #166534;
+}
+
+.soil-zone {
+    font-size: 11px;
+    background: rgba(22, 101, 52, 0.1);
+    color: #166534;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.params-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.param-chip {
+    background: white;
+    border-radius: 8px;
+    padding: 8px 6px;
+    text-align: center;
+}
+
+.param-chip .label {
+    font-size: 10px;
+    color: #6B7280;
+    font-weight: 600;
+}
+
+.param-chip .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #166534;
+}
+
+/* === CROP LIST === */
+.crop-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.crop-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.crop-card:active {
+    transform: scale(0.98);
+    background: #F9FAFB;
+}
+
+.crop-icon {
+    font-size: 32px;
+    flex-shrink: 0;
+}
+
+.crop-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.crop-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 4px;
+}
+
+.crop-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.crop-meta .tag {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.crop-meta .tag.high {
+    background: #D1FAE5;
+    color: #166534;
+}
+
+.crop-meta .tag.medium {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.crop-meta .tag.low {
+    background: #D1FAE5;
+    color: #166534;
+}
+
+.crop-score {
+    font-size: 18px;
+    font-weight: 700;
+    color: #16A34A;
+    flex-shrink: 0;
+}
+
+.crop-card .arrow {
+    color: #9CA3AF;
+    flex-shrink: 0;
+}
+
+/* === SOIL INFO === */
+.soil-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding: 12px;
+    background: #F9FAFB;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #6B7280;
+}
+
+/* === BACK LINK === */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background: #F3F4F6;
+    border: none;
+    border-radius: 8px;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.back-link:active {
+    background: #E5E7EB;
+}
+
+/* === ADVISORY HEADER CARD === */
+.advisory-crop-header {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    word-wrap: break-word;
+    box-sizing: border-box;
+}
+
+/* === INFO CARD === */
+.info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.info-card .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1F2937;
+    margin-bottom: 12px;
+}
+
+/* === MOBILE-FIRST RESPONSIVE FIXES === */
+@media (max-width: 480px) {
+    .content-area {
+        padding: 12px;
+    }
+
+    .step-container {
+        padding: 14px;
+    }
+
+    .step-container h2 {
+        font-size: 16px;
+    }
+
+    .context-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .context-chip {
+        padding: 8px 4px;
+    }
+
+    .context-chip .value {
+        font-size: 11px;
+    }
+
+    .params-row {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+    }
+
+    .param-chip {
+        padding: 6px 4px;
+    }
+
+    .param-chip .label {
+        font-size: 9px;
+    }
+
+    .param-chip .value {
+        font-size: 12px;
+    }
+
+    .crop-card {
+        padding: 12px;
+    }
+
+    .crop-icon {
+        font-size: 28px;
+    }
+
+    .crop-name {
+        font-size: 14px;
+    }
+
+    .crop-score {
+        font-size: 16px;
+    }
+
+    .button-row {
+        flex-wrap: wrap;
+    }
+
+    .gps-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .search-btn {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    /* Force word-wrap on all text elements */
+    .step-container * {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+}
+
 /* === RESPONSIVE === */
 @media (min-width: 600px) {
     .content-area {
         padding: 20px;
+    }
+
+    .step-container {
+        padding: 24px;
     }
 
     .crop-header-card {
@@ -299,5 +727,31 @@
 
     .week-card {
         padding: 20px;
+    }
+}
+
+/* === DESKTOP RESPONSIVENESS === */
+@media (min-width: 1024px) {
+    .content-area {
+        padding: 32px 48px;
+        max-width: 900px;
+    }
+
+    .step-container h2 {
+        font-size: 22px;
+    }
+
+    .crop-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .context-row {
+        gap: 12px;
+    }
+
+    .context-chip {
+        padding: 14px 10px;
     }
 }

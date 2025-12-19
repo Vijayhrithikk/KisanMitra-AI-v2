@@ -345,43 +345,45 @@ const CropAdvisory = () => {
                 <div className="advisory-crop-header" style={{
                     background: 'linear-gradient(135deg, #16a34a, #15803d)',
                     color: 'white',
-                    padding: '1.25rem',
+                    padding: '1rem',
                     borderRadius: '16px',
                     marginBottom: '1rem',
                     overflow: 'hidden',
-                    display: 'block'
+                    display: 'block',
+                    maxWidth: '100%',
+                    boxSizing: 'border-box'
                 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                        <span style={{ fontSize: '2.5rem', flexShrink: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '2rem', flexShrink: 0 }}>
                             {cropNames[selectedCrop?.crop]?.icon || '🌱'}
                         </span>
                         <div style={{ minWidth: 0, flex: 1 }}>
-                            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>
+                            <h2 style={{ margin: 0, fontSize: '1.1rem', wordBreak: 'break-word' }}>
                                 {lang === 'te' ? cropNames[selectedCrop?.crop]?.te : selectedCrop?.crop}
                             </h2>
-                            <div style={{ opacity: 0.9, fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
+                            <div style={{ opacity: 0.9, fontSize: '0.8rem', wordBreak: 'break-word' }}>
                                 {advisory?.sowing_date} → {advisory?.harvest_date}
                             </div>
                         </div>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        <div style={{ flex: '1 1 30%', minWidth: '80px', textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{lang === 'te' ? 'వ్యవధి' : 'Duration'}</div>
-                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{summary.crop_duration || `${advisory?.crop?.duration_days || 120} days`}</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.4rem' }}>
+                        <div style={{ textAlign: 'center', padding: '0.4rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
+                            <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>{lang === 'te' ? 'వ్యవధి' : 'Duration'}</div>
+                            <div style={{ fontWeight: 600, fontSize: '0.75rem', wordBreak: 'break-word' }}>{summary.crop_duration || `${advisory?.crop?.duration_days || 120}d`}</div>
                         </div>
-                        <div style={{ flex: '1 1 30%', minWidth: '80px', textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{lang === 'te' ? 'వర్షం' : 'Rain'}</div>
-                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{summary.expected_rainfall || '--'}</div>
+                        <div style={{ textAlign: 'center', padding: '0.4rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
+                            <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>{lang === 'te' ? 'వర్షం' : 'Rain'}</div>
+                            <div style={{ fontWeight: 600, fontSize: '0.75rem', wordBreak: 'break-word' }}>{summary.expected_rainfall || '--'}</div>
                         </div>
-                        <div style={{ flex: '1 1 30%', minWidth: '80px', textAlign: 'center', padding: '0.5rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
-                            <div style={{ fontSize: '0.75rem', opacity: 0.8 }}>{lang === 'te' ? 'రిస్క్' : 'Risk'}</div>
-                            <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>{summary.main_risk || 'Low'}</div>
+                        <div style={{ textAlign: 'center', padding: '0.4rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px' }}>
+                            <div style={{ fontSize: '0.65rem', opacity: 0.8 }}>{lang === 'te' ? 'రిస్క్' : 'Risk'}</div>
+                            <div style={{ fontWeight: 600, fontSize: '0.75rem', wordBreak: 'break-word' }}>{summary.main_risk || 'Low'}</div>
                         </div>
                     </div>
 
                     {summary.recommendation && (
-                        <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px', fontSize: '0.9rem' }}>
+                        <div style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'rgba(255,255,255,0.15)', borderRadius: '8px', fontSize: '0.8rem', wordBreak: 'break-word' }}>
                             💡 {summary.recommendation}
                         </div>
                     )}
@@ -391,22 +393,23 @@ const CropAdvisory = () => {
                         onClick={() => setShowSubscribeModal(true)}
                         style={{
                             width: '100%',
-                            marginTop: '1rem',
-                            padding: '0.875rem',
+                            marginTop: '0.75rem',
+                            padding: '0.7rem',
                             background: 'rgba(255,255,255,0.95)',
                             color: '#16a34a',
                             border: 'none',
                             borderRadius: '10px',
-                            fontSize: '1rem',
+                            fontSize: '0.9rem',
                             fontWeight: 700,
                             cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '0.5rem'
+                            gap: '0.4rem',
+                            flexWrap: 'wrap'
                         }}
                     >
-                        🔔 {lang === 'te' ? 'ఈ పంటను మానిటర్ చేయండి' : 'Monitor This Crop Daily'}
+                        🔔 {lang === 'te' ? 'మానిటర్ చేయండి' : 'Monitor Crop'}
                     </button>
                 </div>
 
@@ -415,44 +418,50 @@ const CropAdvisory = () => {
                     <div style={{
                         background: 'linear-gradient(135deg, #F0FDF4 0%, #DCFCE7 100%)',
                         borderRadius: '16px',
-                        padding: '1.25rem',
+                        padding: '1rem',
                         marginBottom: '1rem',
-                        border: '2px solid #86EFAC'
+                        border: '2px solid #86EFAC',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box',
+                        overflow: 'hidden'
                     }}>
                         {/* Section Header */}
                         <div style={{
                             display: 'flex',
-                            alignItems: 'center',
+                            alignItems: 'flex-start',
                             justifyContent: 'space-between',
-                            marginBottom: '1rem'
+                            flexWrap: 'wrap',
+                            gap: '0.5rem',
+                            marginBottom: '0.75rem'
                         }}>
-                            <h3 style={{ margin: 0, color: '#166534', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                🌱 Smart Fertilizer Recommendation
+                            <h3 style={{ margin: 0, color: '#166534', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem', flex: '1 1 auto' }}>
+                                🌱 {lang === 'te' ? 'ఎరువుల సిఫారసు' : 'Fertilizer Plan'}
                             </h3>
                             {selectedCrop.fertilizer_plan.cost_benefit_analysis && (
                                 <div style={{
-                                    padding: '4px 10px',
+                                    padding: '3px 8px',
                                     background: selectedCrop.fertilizer_plan.cost_benefit_analysis.sustainable ? '#16A34A' : '#EA580C',
                                     color: 'white',
                                     borderRadius: '6px',
-                                    fontSize: '12px',
-                                    fontWeight: '600'
+                                    fontSize: '10px',
+                                    fontWeight: '600',
+                                    whiteSpace: 'nowrap'
                                 }}>
-                                    ⭐ Sustainability: {selectedCrop.fertilizer_plan.cost_benefit_analysis.sustainability_score}/10
+                                    ⭐ {selectedCrop.fertilizer_plan.cost_benefit_analysis.sustainability_score}/10
                                 </div>
                             )}
                         </div>
 
                         {/* NPK Analysis */}
                         {selectedCrop.fertilizer_plan.npk_analysis && (
-                            <div style={{ marginBottom: '1rem' }}>
-                                <h4 style={{ fontSize: '0.95rem', color: '#166534', marginBottom: '0.75rem' }}>
-                                    📊 Soil NPK Status
+                            <div style={{ marginBottom: '0.75rem' }}>
+                                <h4 style={{ fontSize: '0.85rem', color: '#166534', marginBottom: '0.5rem' }}>
+                                    📊 {lang === 'te' ? 'NPK స్థితి' : 'NPK Status'}
                                 </h4>
                                 <div style={{
                                     display: 'grid',
                                     gridTemplateColumns: 'repeat(3, 1fr)',
-                                    gap: '0.75rem'
+                                    gap: '0.5rem'
                                 }}>
                                     {['n', 'p', 'k'].map(nutrient => {
                                         const analysis = selectedCrop.fertilizer_plan.npk_analysis;
