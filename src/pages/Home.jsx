@@ -15,35 +15,47 @@ const Home = () => {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
     const { user, isLoggedIn } = useAuth() || {};
-    const lang = i18n.language === 'te' ? 'te' : 'en';
+    const lang = i18n.language; // 'en', 'te', or 'hi'
 
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Helper function for 3-language text
+    const txt = (en, hi, te) => {
+        if (lang === 'te') return te;
+        if (lang === 'hi') return hi;
+        return en;
+    };
+
     // Localized strings
     const L = {
-        greeting: lang === 'te' ? 'నమస్కారం' : 'Namaste',
-        welcome: lang === 'te' ? 'కిసాన్ మిత్ర లో స్వాగతం' : 'Welcome to KisanMitra',
-        subtitle: lang === 'te' ? 'మీ వ్యవసాయ సహాయకుడు' : 'Your Farming Companion',
-        cropAdvisory: lang === 'te' ? 'పంట సలహా' : 'Crop Advisory',
-        cropAdvisoryDesc: lang === 'te' ? 'AI ఆధారిత పంట సిఫారసులు' : 'AI-powered crop recommendations',
-        marketplace: lang === 'te' ? 'మార్కెట్‌ప్లేస్' : 'Marketplace',
-        marketplaceDesc: lang === 'te' ? 'మీ పంటలను అమ్మండి' : 'Sell your produce',
-        rentals: lang === 'te' ? 'ట్రాక్టర్ అద్దె' : 'Equipment Rental',
-        rentalsDesc: lang === 'te' ? 'వ్యవసాయ పరికరాలు అద్దెకు' : 'Rent farming equipment',
-        techniques: lang === 'te' ? 'ఆధునిక పద్ధతులు' : 'Modern Techniques',
-        weatherUpdate: lang === 'te' ? 'వాతావరణం' : 'Weather',
-        recentListings: lang === 'te' ? 'తాజా లిస్టింగ్‌లు' : 'Recent Listings',
-        viewAll: lang === 'te' ? 'అన్నీ చూడండి' : 'View All',
-        createListing: lang === 'te' ? 'కొత్త లిస్టింగ్' : 'New Listing',
-        myDashboard: lang === 'te' ? 'నా డాష్‌బోర్డ్' : 'My Dashboard',
-        login: lang === 'te' ? 'లాగిన్' : 'Login',
-        search: lang === 'te' ? 'శోధించండి...' : 'Search...',
-        perQuintal: lang === 'te' ? 'క్వింటాల్' : 'Quintal',
-        myCrops: lang === 'te' ? 'నా పంటలు' : 'My Crops',
-        myCropsDesc: lang === 'te' ? 'రోజువారీ మానిటరింగ్ & ప్లాన్' : 'Daily monitoring & plan',
-        irrigation: lang === 'te' ? 'స్మార్ట్ నీటిపారుదల' : 'Smart Irrigation',
-        irrigationDesc: lang === 'te' ? 'IoT ఆధారిత ఆటోమేషన్' : 'IoT-based automation'
+        greeting: txt('Namaste', 'नमस्ते', 'నమస్కారం'),
+        welcome: txt('Welcome to KisanMitra', 'किसान मित्र में आपका स्वागत है', 'కిసాన్ మిత్ర లో స్వాగతం'),
+        subtitle: txt('Your Farming Companion', 'आपका खेती साथी', 'మీ వ్యవసాయ సహాయకుడు'),
+        cropAdvisory: txt('Crop Advisory', 'फसल सलाह', 'పంట సలహా'),
+        cropAdvisoryDesc: txt('AI-powered crop recommendations', 'AI आधारित फसल सिफारिशें', 'AI ఆధారిత పంట సిఫారసులు'),
+        marketplace: txt('Marketplace', 'मार्केटप्लेस', 'మార్కెట్‌ప్లేస్'),
+        marketplaceDesc: txt('Sell your produce', 'अपनी फसल बेचें', 'మీ పంటలను అమ్మండి'),
+        rentals: txt('Equipment Rental', 'उपकरण किराया', 'ట్రాక్టర్ అద్దె'),
+        rentalsDesc: txt('Rent farming equipment', 'खेती उपकरण किराए पर लें', 'వ్యవసాయ పరికరాలు అద్దెకు'),
+        techniques: txt('Modern Techniques', 'आधुनिक तकनीक', 'ఆధునిక పద్ధతులు'),
+        weatherUpdate: txt('Weather', 'मौसम', 'వాతావరణం'),
+        recentListings: txt('Recent Listings', 'नई लिस्टिंग', 'తాజా లిస్టింగ్‌లు'),
+        viewAll: txt('View All', 'सभी देखें', 'అన్నీ చూడండి'),
+        createListing: txt('New Listing', 'नई लिस्टिंग', 'కొత్త లిస్టింగ్'),
+        myDashboard: txt('My Dashboard', 'मेरा डैशबोर्ड', 'నా డాష్‌బోర్డ్'),
+        login: txt('Login', 'लॉगिन', 'లాగిన్'),
+        search: txt('Search...', 'खोजें...', 'శోధించండి...'),
+        perQuintal: txt('Quintal', 'क्विंटल', 'క్వింటాల్'),
+        myCrops: txt('My Crops', 'मेरी फसलें', 'నా పంటలు'),
+        myCropsDesc: txt('Daily monitoring & plan', 'दैनिक मॉनिटरिंग और प्लान', 'రోజువారీ మానిటరింగ్ & ప్లాన్'),
+        irrigation: txt('Smart Irrigation', 'स्मार्ट सिंचाई', 'స్మార్ట్ నీటిపారుదల'),
+        irrigationDesc: txt('IoT-based automation', 'IoT आधारित ऑटोमेशन', 'IoT ఆధారిత ఆటోమేషన్'),
+        farmer: txt('Farmer', 'किसान', 'రైతు'),
+        home: txt('Home', 'होम', 'హోమ్'),
+        market: txt('Market', 'मार्केट', 'మార్కెట్'),
+        advisory: txt('Advisory', 'सलाह', 'సలహా'),
+        profile: txt('Profile', 'प्रोफ़ाइल', 'ప్రొఫైల్')
     };
 
     useEffect(() => {
@@ -96,7 +108,7 @@ const Home = () => {
             {/* Welcome Section */}
             <section className="welcome-section">
                 <div className="welcome-content">
-                    <h1>{L.greeting}, {user?.name || (lang === 'te' ? 'రైతు' : 'Farmer')}! 👋</h1>
+                    <h1>{L.greeting}, {user?.name || L.farmer}! 👋</h1>
                     <p>{L.welcome}</p>
                 </div>
                 <div className="search-bar">
@@ -181,23 +193,23 @@ const Home = () => {
             <nav className="bottom-nav">
                 <button className="nav-item active" onClick={() => navigate('/')}>
                     <span className="nav-icon">🏠</span>
-                    <span>{lang === 'te' ? 'హోమ్' : 'Home'}</span>
+                    <span>{L.home}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/market')}>
                     <span className="nav-icon">🛒</span>
-                    <span>{lang === 'te' ? 'మార్కెట్' : 'Market'}</span>
+                    <span>{L.market}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/recommend')}>
                     <span className="nav-icon">🌱</span>
-                    <span>{lang === 'te' ? 'సలహా' : 'Advisory'}</span>
+                    <span>{L.advisory}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate('/techniques')}>
                     <span className="nav-icon">📚</span>
-                    <span>{lang === 'te' ? 'పద్ధతులు' : 'Techniques'}</span>
+                    <span>{L.techniques}</span>
                 </button>
                 <button className="nav-item" onClick={() => navigate(isLoggedIn ? '/profile' : '/login')}>
                     <span className="nav-icon">👤</span>
-                    <span>{lang === 'te' ? 'ప్రొఫైల్' : 'Profile'}</span>
+                    <span>{L.profile}</span>
                 </button>
             </nav>
         </div>

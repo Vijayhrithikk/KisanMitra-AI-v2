@@ -12,7 +12,7 @@ const API_BASE = import.meta.env.VITE_ML_API_URL || 'http://localhost:8001';
 const MyCrops = () => {
     const { i18n } = useTranslation();
     const navigate = useNavigate();
-    const lang = i18n.language === 'te' ? 'te' : 'en';
+    const lang = i18n.language; // 'en', 'te', or 'hi'
 
     const [loading, setLoading] = useState(true);
     const [subscriptions, setSubscriptions] = useState([]);
@@ -30,24 +30,35 @@ const MyCrops = () => {
         'Pulses': '🫘', 'Turmeric': '🟡', 'Banana': '🍌'
     };
 
+    // Helper function for 3-language text
+    const txt = (en, hi, te) => {
+        if (lang === 'te') return te;
+        if (lang === 'hi') return hi;
+        return en;
+    };
+
     // Labels
     const L = {
-        title: lang === 'te' ? '🌾 నా పంటలు' : '🌾 My Crops',
-        subtitle: lang === 'te' ? 'మీ పంటల రోజువారీ మానిటరింగ్' : 'Daily monitoring for your crops',
-        addCrop: lang === 'te' ? '+ కొత్త పంట జోడించండి' : '+ Add New Crop',
-        noCrops: lang === 'te' ? 'ఇంకా పంటలు జోడించలేదు' : 'No crops added yet',
-        addFirst: lang === 'te' ? 'మీ మొదటి పంటను జోడించండి' : 'Add your first crop to start monitoring',
-        day: lang === 'te' ? 'రోజు' : 'Day',
-        stage: lang === 'te' ? 'దశ' : 'Stage',
-        alerts: lang === 'te' ? 'హెచ్చరికలు' : 'Alerts',
-        viewPlan: lang === 'te' ? 'రోజు ప్లాన్ చూడండి' : 'View Daily Plan',
-        refresh: lang === 'te' ? 'రిఫ్రెష్' : 'Refresh',
-        area: lang === 'te' ? 'విస్తీర్ణం' : 'Area',
-        acres: lang === 'te' ? 'ఎకరాలు' : 'acres',
-        delete: lang === 'te' ? 'తొలగించు' : 'Delete',
-        confirmDelete: lang === 'te' ? 'నిజంగా తొలగించాలా?' : 'Really delete?',
-        yes: lang === 'te' ? 'అవును' : 'Yes',
-        no: lang === 'te' ? 'కాదు' : 'No'
+        title: txt('🌾 My Crops', '🌾 मेरी फसलें', '🌾 నా పంటలు'),
+        subtitle: txt('Daily monitoring for your crops', 'आपकी फसलों की दैनिक निगरानी', 'మీ పంటల రోజువారీ మానిటరింగ్'),
+        addCrop: txt('+ Add New Crop', '+ नई फसल जोड़ें', '+ కొత్త పంట జోడించండి'),
+        noCrops: txt('No crops added yet', 'अभी तक कोई फसल नहीं जोड़ी', 'ఇంకా పంటలు జోడించలేదు'),
+        addFirst: txt('Add your first crop to start monitoring', 'निगरानी शुरू करने के लिए अपनी पहली फसल जोड़ें', 'మీ మొదటి పంటను జోడించండి'),
+        day: txt('Day', 'दिन', 'రోజు'),
+        stage: txt('Stage', 'चरण', 'దశ'),
+        alerts: txt('Alerts', 'अलर्ट', 'హెచ్చరికలు'),
+        viewPlan: txt('View Daily Plan', 'दैनिक प्लान देखें', 'రోజు ప్లాన్ చూడండి'),
+        refresh: txt('Refresh', 'रिफ्रेश', 'రిఫ్రెష్'),
+        area: txt('Area', 'क्षेत्र', 'విస్తీర్ణం'),
+        acres: txt('acres', 'एकड़', 'ఎకరాలు'),
+        delete: txt('Delete', 'हटाएं', 'తొలగించు'),
+        confirmDelete: txt('Really delete?', 'वाकई हटाना है?', 'నిజంగా తొలగించాలా?'),
+        yes: txt('Yes', 'हाँ', 'అవును'),
+        no: txt('No', 'नहीं', 'కాదు'),
+        loading: txt('Loading your crops...', 'आपकी फसलें लोड हो रही हैं...', 'మీ పంటలు లోడ్ అవుతున్నాయి...'),
+        goodCondition: txt('Good condition', 'अच्छी स्थिति', 'మంచి పరిస్థితి'),
+        cropRecommend: txt('Crop Recommendation', 'फसल सिफारिश', 'పంట సిఫార్సు'),
+        cropAdvisory: txt('Crop Advisory', 'फसल सलाह', 'పంట సలహా')
     };
 
     useEffect(() => {
@@ -104,7 +115,7 @@ const MyCrops = () => {
     const formatDate = (dateStr) => {
         if (!dateStr) return '';
         const date = new Date(dateStr);
-        return date.toLocaleDateString(lang === 'te' ? 'te-IN' : 'en-IN', {
+        return date.toLocaleDateString(lang === 'te' ? 'te-IN' : lang === 'hi' ? 'hi-IN' : 'en-IN', {
             day: 'numeric', month: 'short'
         });
     };
@@ -114,7 +125,7 @@ const MyCrops = () => {
             <div className="mycrops-container">
                 <div className="loading-state">
                     <Loader2 className="spinner" size={40} />
-                    <p>{lang === 'te' ? 'లోడ్ అవుతోంది...' : 'Loading your crops...'}</p>
+                    <p>{L.loading}</p>
                 </div>
             </div>
         );
@@ -232,7 +243,7 @@ const MyCrops = () => {
                                     ) : (
                                         <div className="stat success">
                                             <TrendingUp size={16} />
-                                            <span>{lang === 'te' ? 'మంచి పరిస్థితి' : 'Good condition'}</span>
+                                            <span>{L.goodCondition}</span>
                                         </div>
                                     )}
                                     <button className="view-plan-btn">
@@ -257,11 +268,11 @@ const MyCrops = () => {
             <div className="quick-actions">
                 <button onClick={() => navigate('/recommend')}>
                     <Search size={20} />
-                    <span>{lang === 'te' ? 'పంట సిఫార్సు' : 'Crop Recommendation'}</span>
+                    <span>{L.cropRecommend}</span>
                 </button>
                 <button onClick={() => navigate('/advisory')}>
                     <Calendar size={20} />
-                    <span>{lang === 'te' ? 'పంట సలహా' : 'Crop Advisory'}</span>
+                    <span>{L.cropAdvisory}</span>
                 </button>
             </div>
         </div>
