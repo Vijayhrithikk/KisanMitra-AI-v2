@@ -36,20 +36,47 @@ const Login = () => {
             setLoading(true);
 
             try {
-                // Check if farmer exists in MongoDB database
-                const response = await fetch(`${MARKET_API_URL}/users/phone/${phone}`);
-                const data = await response.json();
+                // Check BOTH farmers and users collections
+                // First, check farmers collection
+                let farmerExists = false;
+                let userData = null;
 
-                if (data && !data.error && (data.userId || data.phone || data._id)) {
+                // Try farmers endpoint first
+                try {
+                    const farmersResponse = await fetch(`${MARKET_API_URL}/farmers/phone/${phone}`);
+                    const farmersData = await farmersResponse.json();
+                    if (farmersData && farmersData.success && farmersData.farmer) {
+                        farmerExists = true;
+                        userData = farmersData.farmer;
+                    }
+                } catch (e) {
+                    console.log('Farmers check failed, trying users...');
+                }
+
+                // If not in farmers, try users collection
+                if (!farmerExists) {
+                    try {
+                        const usersResponse = await fetch(`${MARKET_API_URL}/users/phone/${phone}`);
+                        const usersData = await usersResponse.json();
+                        if (usersData && !usersData.error && (usersData.user || usersData.exists || usersData.userId || usersData.phone || usersData._id)) {
+                            farmerExists = true;
+                            userData = usersData.user || usersData;
+                        }
+                    } catch (e) {
+                        console.log('Users check failed');
+                    }
+                }
+
+                if (farmerExists && userData) {
                     // Farmer exists in database - log them in
-                    const user = data;
+                    const user = userData;
                     const farmerSession = {
-                        id: user._id || user.id || user.userId || `FARMER-${phone.slice(-4)}`,
+                        id: user._id || user.id || user.userId || user.farmerId || `FARMER-${phone.slice(-4)}`,
                         role: 'farmer',
                         phone: phone,
                         phoneNumber: phone,
-                        farmerId: user.farmerId || user.userId || `FARMER-${phone.slice(-4)}`,
-                        name: user.name || `Farmer ${phone.slice(-4)}`,
+                        farmerId: user.farmerId || user.userId || user._id || `FARMER-${phone.slice(-4)}`,
+                        name: user.name || user.farmerName || `Farmer ${phone.slice(-4)}`,
                         verified: user.verified ?? true,
                         loginAt: new Date().toISOString()
                     };
@@ -57,6 +84,7 @@ const Login = () => {
                     // Store session
                     localStorage.setItem('kisanmitra_session', JSON.stringify(farmerSession));
                     localStorage.setItem('userPhone', phone);
+                    localStorage.setItem('farmerPhone', phone);
                     localStorage.setItem('currentFarmer', JSON.stringify(farmerSession));
                     localStorage.setItem('isAuthenticated', 'true');
 
@@ -65,10 +93,9 @@ const Login = () => {
                 } else {
                     // Farmer doesn't exist - need to register
                     setLoading(false);
-                    setError(i18n.language === 'te'
-                        ? 'మీరు నమోదు కాలేదు. దయచేసి నమోదు చేయండి.'
-                        : 'You are not registered. Please register first.');
-                    // Could redirect to registration page
+                    const { i18n } = useTranslation;
+                    setError(t('login.notRegistered') || 'You are not registered. Please register first.');
+                    // Redirect to registration page
                     setTimeout(() => {
                         navigate('/farmer/register', { state: { phone } });
                     }, 2000);
