@@ -5,14 +5,22 @@
     box-sizing: border-box;
 }
 
+/* === FORCE FIT - Prevent any horizontal overflow === */
+.advisory-app,
+.advisory-app * {
+    max-width: 100% !important;
+}
+
+.advisory-app {
+    width: 100% !important;
+    overflow-x: hidden !important;
+}
+
 /* === BASE LAYOUT === */
 .advisory-app {
     min-height: 100vh;
     background: #F5F7FA;
     padding-bottom: 80px;
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
 }
 
 /* === HEADER === */
