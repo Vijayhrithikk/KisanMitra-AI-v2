@@ -32,6 +32,8 @@ class SoilService:
             if not os.path.exists(agritech_path):
                 agritech_path = os.path.join(os.path.dirname(__file__), '../../Agritech.csv')
             if not os.path.exists(agritech_path):
+                agritech_path = os.path.join(os.path.dirname(__file__), '../data/Agritech.csv')
+            if not os.path.exists(agritech_path):
                 agritech_path = os.path.join(os.path.dirname(__file__), '../../../../Agritech.csv')
             
             if os.path.exists(agritech_path):
