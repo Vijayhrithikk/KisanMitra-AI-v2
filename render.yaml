@@ -1,5 +1,5 @@
 services:
-  # ML Engine (FastAPI)
+  # ML Engine (FastAPI) - Crop Recommendation, Advisory, etc.
   - type: web
     name: kisanmitra-ml
     runtime: python
@@ -9,8 +9,16 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.11"
+      - key: OPENWEATHER_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_WHATSAPP_NUMBER
+        sync: false
 
-  # Marketplace API (Flask)
+  # Marketplace API (Flask) - Market, Orders, Users
   - type: web
     name: kisanmitra-api
     runtime: python
@@ -21,4 +29,6 @@ services:
       - key: PYTHON_VERSION
         value: "3.11"
       - key: MONGODB_URI
+        sync: false
+      - key: SECRET_KEY
         sync: false
