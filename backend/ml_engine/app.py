@@ -38,7 +38,18 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 from dotenv import load_dotenv
 import os
-load_dotenv(os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
+# Search for .env in current, parent, and ../.. directories
+env_paths = [
+    os.path.join(os.getcwd(), '.env'),
+    os.path.join(os.path.dirname(__file__), '.env'),
+    os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+]
+for path in env_paths:
+    if os.path.exists(path):
+        load_dotenv(path)
+        break
+else:
+    load_dotenv() # Fallback to default
 
 app = FastAPI(title="KisanMitra ML Engine", version="2.0.0")
 
