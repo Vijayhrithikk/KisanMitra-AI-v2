@@ -59,9 +59,12 @@ git push origin main
 Go back to Vercel → Project Settings → Environment Variables:
 
 ```
-VITE_ML_API_URL = https://kisanmitra-ml-engine.onrender.com
-VITE_MARKET_API_URL = https://kisanmitra-marketplace.onrender.com/api
+VITE_ML_API_URL = https://kisanmitra-ml.onrender.com
+VITE_MARKET_API_URL = https://kisanmitra-api-fe31.onrender.com/api
 ```
+
+- **ML Engine**: `https://kisanmitra-ml.onrender.com`
+- **Marketplace API**: `https://kisanmitra-api-fe31.onrender.com/api`
 
 Then click **Redeploy**.
 
