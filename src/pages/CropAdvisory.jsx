@@ -1024,21 +1024,25 @@ const CropAdvisory = () => {
                                         irrigationType: 'canal'
                                     };
                                     try {
+                                        console.log('[Subscribe] API_BASE:', API_BASE);
+                                        console.log('[Subscribe] Request:', requestBody);
                                         const res = await fetch(`${API_BASE}/subscribe-crop`, {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify(requestBody)
                                         });
+                                        console.log('[Subscribe] Response status:', res.status);
                                         const data = await res.json();
+                                        console.log('[Subscribe] Response data:', data);
                                         if (data.success) {
                                             setShowSubscribeModal(false);
                                             navigate(`/monitor/${data.subscription.subscriptionId}`);
                                         } else {
-                                            alert(lang === 'te' ? 'సమస్య. మళ్ళీ ప్రయత్నించండి' : 'Error. Please try again.');
+                                            alert(lang === 'te' ? `సమస్య: ${data.detail || 'Error'}` : `Error: ${data.detail || 'Please try again.'}`);
                                         }
                                     } catch (err) {
-                                        console.error(err);
-                                        alert(lang === 'te' ? 'కనెక్షన్ సమస్య' : 'Connection error');
+                                        console.error('[Subscribe] Error:', err);
+                                        alert(lang === 'te' ? `కనెక్షన్ సమస్య: ${err.message}` : `Connection error: ${err.message}`);
                                     } finally {
                                         setSubscribing(false);
                                     }
