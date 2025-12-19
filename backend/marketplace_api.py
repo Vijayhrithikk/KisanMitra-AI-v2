@@ -140,16 +140,23 @@ def record_payment(order_id):
 @app.route('/api/orders/guest', methods=['POST'])
 def create_guest_order():
     """Create order for guest (non-registered buyer)"""
-    data = request.json
-    # Generate a guest order
-    order_data = {
-        'buyerId': f"GUEST-{data['buyer']['phone'][-4:]}",
-        'buyerName': data['buyer']['name'],
-        'buyerPhone': data['buyer']['phone'],
-        **{k: v for k, v in data.items() if k != 'buyer'}
-    }
-    order = db.create_order(order_data)
-    return jsonify(order), 201
+    try:
+        data = request.json
+        print(f"📦 Creating guest order: {data.get('buyer', {}).get('name', 'Unknown')}")
+        
+        # Generate a guest order
+        order_data = {
+            'buyerId': f"GUEST-{data['buyer']['phone'][-4:]}",
+            'buyerName': data['buyer']['name'],
+            'buyerPhone': data['buyer']['phone'],
+            **{k: v for k, v in data.items() if k != 'buyer'}
+        }
+        order = db.create_order(order_data)
+        print(f"✅ Order created: {order.get('orderId', 'Unknown')}")
+        return jsonify(order), 201
+    except Exception as e:
+        print(f"❌ Guest order error: {e}")
+        return jsonify({'error': str(e)}), 500
 
 # ==================== USERS ENDPOINTS ====================
 
