@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KisanMitra - Crop Recommendation System Documentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+        h1 { color: #1a5f2e; font-size: 2.2em; margin-bottom: 10px; border-bottom: 3px solid #1a5f2e; padding-bottom: 10px; }
+        h2 { color: #2d7a3e; font-size: 1.6em; margin: 30px 0 15px; border-left: 4px solid #2d7a3e; padding-left: 15px; }
+        h3 { color: #444; font-size: 1.2em; margin: 20px 0 10px; }
+        p { margin: 10px 0; text-align: justify; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .header img { width: 80px; margin-bottom: 15px; }
+        .subtitle { color: #666; font-size: 1.1em; }
+        .section { margin: 25px 0; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        .highlight { background: #e8f5e9; padding: 15px; border-radius: 5px; border-left: 4px solid #4caf50; margin: 15px 0; }
+        .warning { background: #fff3e0; padding: 15px; border-radius: 5px; border-left: 4px solid #ff9800; margin: 15px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #1a5f2e; color: white; }
+        tr:nth-child(even) { background: #f5f5f5; }
+        .code { background: #263238; color: #80cbc4; padding: 15px; border-radius: 5px; font-family: 'Courier New', monospace; font-size: 0.9em; overflow-x: auto; white-space: pre-wrap; margin: 15px 0; }
+        .flow-box { display: inline-block; background: #e3f2fd; padding: 8px 15px; margin: 5px; border-radius: 20px; border: 1px solid #90caf9; }
+        .arrow { color: #1976d2; font-weight: bold; margin: 0 5px; }
+        .diagram { text-align: center; padding: 20px; background: #fafafa; border-radius: 8px; margin: 20px 0; }
+        .metric { display: inline-block; background: #4caf50; color: white; padding: 10px 20px; border-radius: 5px; margin: 5px; text-align: center; }
+        .metric-value { font-size: 1.5em; font-weight: bold; display: block; }
+        .metric-label { font-size: 0.9em; }
+        footer { margin-top: 40px; text-align: center; color: #666; border-top: 1px solid #ddd; padding-top: 20px; }
+        @media print {
+            body { padding: 20px; }
+            .section { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌾 KisanMitra Crop Recommendation System</h1>
+        <p class="subtitle">Complete Technical Documentation - Pin to Pin Explanation</p>
+        <p style="color: #888; margin-top: 10px;">Version 1.0 | December 2025</p>
+    </div>
+
+    <h2>1. System Overview</h2>
+    <div class="section">
+        <p>The KisanMitra Crop Recommendation System is an <strong>AI-powered agricultural advisory platform</strong> that combines Machine Learning with rule-based heuristics to provide accurate crop recommendations for Indian farmers.</p>
+        
+        <div class="highlight">
+            <strong>Key Features:</strong>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>ML-based predictions using RandomForest Classifier</li>
+                <li>Rule-based fallback for reliability</li>
+                <li>Real-time weather integration</li>
+                <li>5-day forecast analysis</li>
+                <li>Soil and nutrient analysis</li>
+                <li>Telugu + English bilingual support</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>2. Training Pipeline</h2>
+    <div class="section">
+        <h3>2.1 Training Data (data_core.csv)</h3>
+        <p>The model is trained on <strong>8,000+ agricultural samples</strong> covering diverse conditions across India.</p>
+        
+        <table>
+            <tr><th>Feature</th><th>Description</th><th>Range</th></tr>
+            <tr><td>Temperature</td><td>Ambient temperature (°C)</td><td>20-40</td></tr>
+            <tr><td>Humidity</td><td>Relative humidity (%)</td><td>40-80</td></tr>
+            <tr><td>Moisture</td><td>Soil moisture (%)</td><td>20-70</td></tr>
+            <tr><td>Soil Type</td><td>Categorical</td><td>Sandy, Loamy, Black, Red, Clayey</td></tr>
+            <tr><td>Nitrogen (N)</td><td>Soil N content</td><td>0-45</td></tr>
+            <tr><td>Potassium (K)</td><td>Soil K content</td><td>0-22</td></tr>
+            <tr><td>Phosphorous (P)</td><td>Soil P content</td><td>0-45</td></tr>
+            <tr><td>Crop Type</td><td><strong>Target Variable</strong></td><td>14 crops</td></tr>
+        </table>
+
+        <h3>2.2 Training Process</h3>
+        <div class="diagram">
+            <span class="flow-box">Load CSV Data</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Encode Features</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Train/Test Split (80/20)</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Train RandomForest</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Save Model (.pkl)</span>
+        </div>
+
+        <div class="code">
+# Training Configuration
+Model: RandomForestClassifier
+Trees: 100 (n_estimators)
+Split: 80% Training, 20% Testing
+Random State: 42
+
+# Encoding
+Soil Type → LabelEncoder → Soil_Code (0-4)
+Crop Type → LabelEncoder → Crop_Code (0-13)
+
+# Features Used
+[Temperature, Humidity, Moisture, N, P, K, Soil_Code]
+        </div>
+    </div>
+
+    <h2>3. ML Recommendation Service</h2>
+    <div class="section">
+        <h3>3.1 Prediction Flow</h3>
+        <div class="diagram">
+            <span class="flow-box">Input Parameters</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Encode & Scale</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">RandomForest Predict</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Filter ≥50% Confidence</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Sort & Return</span>
+        </div>
+
+        <h3>3.2 Input Parameters</h3>
+        <table>
+            <tr><th>Parameter</th><th>Source</th><th>Default</th></tr>
+            <tr><td>soil_type</td><td>User input / AI research</td><td>"Loamy"</td></tr>
+            <tr><td>season</td><td>SeasonService</td><td>Current</td></tr>
+            <tr><td>temp, humidity</td><td>WeatherService (OpenWeather API)</td><td>28°C, 60%</td></tr>
+            <tr><td>soil_ph</td><td>Manual / Database</td><td>7.0</td></tr>
+            <tr><td>soil_n, soil_p, soil_k</td><td>Soil test data</td><td>150, 50, 150</td></tr>
+            <tr><td>rain_days</td><td>Forecast analysis</td><td>2</td></tr>
+        </table>
+
+        <h3>3.3 Output Format</h3>
+        <div class="code">
+{
+    "crop": "Paddy",
+    "confidence": 87,
+    "ml_prediction": true,
+    "yield_potential": "High",
+    "risk_factor": "Medium",
+    "water_needs": "High",
+    "reason": "Excellent match for Clayey soil. pH 6.5 is optimal.",
+    "fertilizer_recommendation": "Apply Urea in splits. DAP for root growth.",
+    "forecast_insight": "Favorable: 4 rain days expected",
+    "warnings": []
+}
+        </div>
+    </div>
+
+    <h2>4. Rule-Based Fallback System</h2>
+    <div class="section">
+        <p>When the ML model is unavailable or for additional insights, a <strong>scoring-based system</strong> evaluates each crop:</p>
+
+        <h3>4.1 Scoring Algorithm</h3>
+        <table>
+            <tr><th>Check</th><th>Impact</th></tr>
+            <tr><td>Season doesn't match</td><td>Skip crop entirely</td></tr>
+            <tr><td>Soil type mismatch</td><td>-25 points</td></tr>
+            <tr><td>pH out of range</td><td>-20 points</td></tr>
+            <tr><td>Temperature outside optimal</td><td>-30 points</td></tr>
+            <tr><td>High water needs + rain expected</td><td>+10 points</td></tr>
+            <tr><td>Low water needs + too much rain</td><td>-15 points</td></tr>
+            <tr><td>Nitrogen-fixing crop + low N soil</td><td>+20 points</td></tr>
+            <tr><td>AI-researched soil match</td><td>+5 points</td></tr>
+        </table>
+
+        <div class="highlight">
+            <strong>Threshold:</strong> Only crops with score > 40 are recommended.
+        </div>
+    </div>
+
+    <h2>5. Crop Profiles Database</h2>
+    <div class="section">
+        <p>The system maintains detailed profiles for <strong>14 crops</strong> commonly grown in Andhra Pradesh:</p>
+        
+        <table>
+            <tr><th>Crop</th><th>Seasons</th><th>Water Needs</th><th>Risk</th><th>Best Soil</th></tr>
+            <tr><td>Paddy</td><td>Kharif, Rabi</td><td>High</td><td>Medium</td><td>Clayey, Alluvial</td></tr>
+            <tr><td>Wheat</td><td>Rabi</td><td>Medium</td><td>Low</td><td>Loamy, Alluvial</td></tr>
+            <tr><td>Cotton</td><td>Kharif</td><td>Medium</td><td>High</td><td>Black Cotton</td></tr>
+            <tr><td>Maize</td><td>Kharif, Rabi</td><td>Medium</td><td>Low</td><td>Loamy, Red</td></tr>
+            <tr><td>Ground Nuts</td><td>Kharif, Rabi</td><td>Low</td><td>Low</td><td>Sandy, Red</td></tr>
+            <tr><td>Sugarcane</td><td>All</td><td>High</td><td>Low</td><td>Loamy, Clayey</td></tr>
+            <tr><td>Millets</td><td>Kharif</td><td>Low</td><td>Low</td><td>Red, Sandy</td></tr>
+            <tr><td>Pulses</td><td>Kharif, Rabi</td><td>Low</td><td>Low</td><td>Loamy, Red</td></tr>
+        </table>
+    </div>
+
+    <h2>6. Daily Advisory Service</h2>
+    <div class="section">
+        <p>Combines multiple services into comprehensive farming advice:</p>
+        
+        <div class="diagram">
+            <span class="flow-box">Weather Service</span>
+            <span class="flow-box">Season Service</span>
+            <span class="flow-box">Alert Service</span>
+            <span class="flow-box">Pest Warning Service</span>
+            <span class="flow-box">Crop Calendar Service</span>
+            <br><br>
+            <span class="arrow">↓</span>
+            <br><br>
+            <span class="flow-box" style="background: #c8e6c9; font-weight: bold;">Daily Advisory Service</span>
+        </div>
+
+        <h3>6.1 Advisory Output</h3>
+        <ul style="margin-left: 20px;">
+            <li><strong>Date & Time:</strong> Current timestamp</li>
+            <li><strong>Weather:</strong> Current conditions + 5-day forecast</li>
+            <li><strong>Season:</strong> Kharif/Rabi/Zaid with details</li>
+            <li><strong>Alerts:</strong> Weather warnings (top 5)</li>
+            <li><strong>Daily Tasks:</strong> Prioritized activities</li>
+            <li><strong>Crop-Specific:</strong> Pest warnings, calendar, harvest info</li>
+        </ul>
+    </div>
+
+    <h2>7. Model Accuracy & Metrics</h2>
+    <div class="section">
+        <div style="text-align: center; margin: 20px 0;">
+            <div class="metric">
+                <span class="metric-value">85-92%</span>
+                <span class="metric-label">Model Accuracy</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">8,000+</span>
+                <span class="metric-label">Training Samples</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">14</span>
+                <span class="metric-label">Crop Types</span>
+            </div>
+            <div class="metric">
+                <span class="metric-value">100</span>
+                <span class="metric-label">Decision Trees</span>
+            </div>
+        </div>
+
+        <h3>Confidence Interpretation</h3>
+        <table>
+            <tr><th>Confidence</th><th>Interpretation</th></tr>
+            <tr><td>≥ 80%</td><td>Highly Recommended ✅</td></tr>
+            <tr><td>60-79%</td><td>Good Choice 👍</td></tr>
+            <tr><td>50-59%</td><td>Consider with Caution ⚠️</td></tr>
+            <tr><td>< 50%</td><td>Not Recommended ❌</td></tr>
+        </table>
+    </div>
+
+    <h2>8. File Structure</h2>
+    <div class="section">
+        <div class="code">
+backend/ml_engine/
+├── training/
+│   └── train_model.py          # Training script
+├── models/
+│   └── crop_recommender.pkl    # Trained model + encoders
+├── data/
+│   └── crop_profiles.json      # Crop profiles database
+├── services/
+│   ├── ml_recommendation_service.py   # ML predictions
+│   ├── recommendation_service.py      # Rule-based fallback
+│   ├── weather_service.py             # OpenWeather API
+│   ├── season_service.py              # Season detection
+│   └── daily_advisory_service.py      # Combined advisory
+└── app.py                      # FastAPI endpoints
+
+data_core.csv                   # 8000+ training samples
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>KisanMitra AI</strong> - Empowering Farmers with Technology</p>
+        <p>Generated: December 2025 | For internal documentation purposes</p>
+    </footer>
+</body>
+</html>

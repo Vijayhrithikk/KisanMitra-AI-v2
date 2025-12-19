@@ -1,0 +1,7 @@
+# Marketplace API (Flask) - Render Deployment
+
+# Build Command
+pip install -r requirements.txt
+
+# Start Command
+gunicorn marketplace_api:app --bind 0.0.0.0:$PORT

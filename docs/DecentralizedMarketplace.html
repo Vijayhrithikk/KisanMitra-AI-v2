@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KisanMitra - Decentralized Marketplace Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+
+        h1 {
+            color: #1565c0;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #1565c0;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #1976d2;
+            font-size: 1.6em;
+            margin: 30px 0 15px;
+            border-left: 4px solid #1976d2;
+            padding-left: 15px;
+        }
+
+        h3 {
+            color: #444;
+            font-size: 1.2em;
+            margin: 20px 0 10px;
+        }
+
+        p {
+            margin: 10px 0;
+            text-align: justify;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .highlight {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+            margin: 15px 0;
+        }
+
+        .warning {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ff9800;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #4caf50;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #1565c0;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        .code {
+            background: #263238;
+            color: #80cbc4;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin: 15px 0;
+        }
+
+        .flow-box {
+            display: inline-block;
+            background: #e3f2fd;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            border: 1px solid #90caf9;
+        }
+
+        .arrow {
+            color: #1976d2;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+
+        .diagram {
+            text-align: center;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .feature-card h4 {
+            color: #1565c0;
+            margin-bottom: 8px;
+        }
+
+        .why-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .why-box h3 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #ddd;
+            padding-top: 20px;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+
+            .section {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🔗 KisanMitra Decentralized Marketplace</h1>
+        <p class="subtitle">Complete Technical Documentation - Architecture & Design Rationale</p>
+        <p style="color: #888; margin-top: 10px;">Version 1.0 | December 2025</p>
+    </div>
+
+    <h2>1. Why Decentralized?</h2>
+    <div class="section">
+        <div class="why-box">
+            <h3>🎯 The Problem with Traditional Agricultural Markets</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Middlemen Exploitation:</strong> Farmers get only 20-30% of retail price</li>
+                <li><strong>No Price Transparency:</strong> Information asymmetry hurts farmers</li>
+                <li><strong>No Proof of Authenticity:</strong> Buyers can't verify produce origin</li>
+                <li><strong>Tampered Records:</strong> Centralized databases can be manipulated</li>
+                <li><strong>No Accountability:</strong> Disputes rely on word-of-mouth</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>✅ How Decentralization Solves This</h3>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>Immutable Ledger:</strong> Once recorded, data cannot be changed</li>
+                <li><strong>Hash-Chain Integrity:</strong> Any tampering breaks the chain</li>
+                <li><strong>Digital Signatures:</strong> Non-repudiable farmer identity</li>
+                <li><strong>Direct P2P Trading:</strong> Farmers connect directly with buyers</li>
+                <li><strong>Transparent Pricing:</strong> All listings publicly verifiable</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>2. System Architecture</h2>
+    <div class="section">
+        <div class="diagram">
+            <span class="flow-box">Farmer Creates Listing</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">SHA-256 Hash Generated</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">ECDSA Signature Added</span>
+            <br><br>
+            <span class="arrow">↓</span>
+            <br><br>
+            <span class="flow-box">Block Created (with previousHash)</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Appended to Ledger</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Hash Chain Formed</span>
+        </div>
+
+        <h3>2.1 Core Components</h3>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h4>🔐 MarketService</h4>
+                <p>Blockchain-like ledger with hash chains, block verification, and IPFS simulation</p>
+            </div>
+            <div class="feature-card">
+                <h4>🔑 KeyManager</h4>
+                <p>ECDSA key generation, digital signing, and signature verification</p>
+            </div>
+            <div class="feature-card">
+                <h4>📦 OrderService</h4>
+                <p>Order lifecycle, payment tracking, and farmer payout management</p>
+            </div>
+            <div class="feature-card">
+                <h4>✅ LedgerVerification</h4>
+                <p>UI for verifying listing authenticity and chain integrity</p>
+            </div>
+        </div>
+    </div>
+
+    <h2>3. Hash Chain (Blockchain-Like)</h2>
+    <div class="section">
+        <p>Each listing creates a <strong>block</strong> that links to the previous block via its hash, forming an
+            <strong>immutable chain</strong>:</p>
+
+        <div class="code">
+            Block Structure:
+            {
+            "type": "LISTING_CREATED",
+            "listingId": "LIST-2025-0042",
+            "blockIndex": 5,
+            "previousHash": "0x8a3f...(previous block's hash)",
+            "blockHash": "0x4b7c...(this block's hash)",
+            "metaHash": "SHA-256 of listing data",
+            "signature": "ECDSA signature",
+            "publicKey": { ... JWK format ... },
+            "timestamp": "2025-12-08T10:30:00Z",
+            "txHash": "0x...(transaction hash)",
+            "data": { ... listing details ... }
+            }
+        </div>
+
+        <h3>3.1 How Block Hash is Computed</h3>
+        <div class="code">
+            hashInput = {
+            type,
+            listingId,
+            metaHash,
+            previousHash, // Links to previous block
+            timestamp,
+            blockIndex
+            }
+
+            blockHash = "0x" + SHA256(canonicalize(hashInput))
+        </div>
+
+        <div class="highlight">
+            <strong>Key Insight:</strong> If anyone modifies any old block, the hash changes. This breaks the chain
+            because the next block's <code>previousHash</code> no longer matches. This is the fundamental principle of
+            blockchain immutability.
+        </div>
+    </div>
+
+    <h2>4. Digital Signatures (Non-Repudiation)</h2>
+    <div class="section">
+        <p>Farmers digitally sign their listings using <strong>ECDSA (Elliptic Curve Digital Signature
+                Algorithm)</strong>:</p>
+
+        <h3>4.1 Key Generation (Web Crypto API)</h3>
+        <div class="code">
+            // Generate ECDSA key pair (P-256 curve)
+            keyPair = crypto.subtle.generateKey(
+            { name: 'ECDSA', namedCurve: 'P-256' },
+            true, // extractable
+            ['sign', 'verify']
+            )
+
+            // Output:
+            // - Private Key: Stored securely in localStorage
+            // - Public Key: Shared in listings for verification
+            // - Fingerprint: 16-char hash for farmer identification
+        </div>
+
+        <h3>4.2 Signing Process</h3>
+        <div class="diagram">
+            <span class="flow-box">Listing Data</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">SHA-256 Hash</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Sign with Private Key</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">Signature (hex)</span>
+        </div>
+
+        <h3>4.3 Why This Matters</h3>
+        <div class="success">
+            <ul style="margin-left: 20px;">
+                <li><strong>Authentication:</strong> Proves the farmer created this listing</li>
+                <li><strong>Integrity:</strong> Proves the listing hasn't been modified</li>
+                <li><strong>Non-Repudiation:</strong> Farmer cannot deny creating the listing</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>5. Verification System</h2>
+    <div class="section">
+        <h3>5.1 Chain Verification</h3>
+        <p>Anyone can verify the entire ledger integrity:</p>
+        <div class="code">
+            verifyChain():
+            for each block:
+            1. Recompute block hash from data
+            2. Compare with stored blockHash
+            3. Verify previousHash matches previous block's hash
+            4. If any mismatch → Chain is BROKEN (tampering detected!)
+        </div>
+
+        <h3>5.2 Listing Verification</h3>
+        <div class="code">
+            verifyListing(listingId):
+            1. Find original LISTING_CREATED event in ledger
+            2. Extract original data
+            3. Recompute SHA-256 hash
+            4. Compare with stored metaHash
+            5. Return: verified (true/false), updateHistory, saleStatus
+        </div>
+
+        <h3>5.3 Signature Verification</h3>
+        <div class="code">
+            verifyListingSignature(listingId):
+            1. Get listing's metaHash, signature, and publicKey
+            2. Use crypto.subtle.verify() with ECDSA
+            3. Returns true if signature is valid
+        </div>
+    </div>
+
+    <h2>6. Order & Payment System</h2>
+    <div class="section">
+        <h3>6.1 Order Lifecycle</h3>
+        <div class="diagram">
+            <span class="flow-box">PENDING</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">CONFIRMED</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">PAID</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">SHIPPED</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">DELIVERED</span>
+            <span class="arrow">→</span>
+            <span class="flow-box">COMPLETED</span>
+        </div>
+
+        <h3>6.2 Pricing Structure</h3>
+        <table>
+            <tr>
+                <th>Component</th>
+                <th>Calculation</th>
+            </tr>
+            <tr>
+                <td>Subtotal</td>
+                <td>Quantity × Unit Price</td>
+            </tr>
+            <tr>
+                <td>Delivery Charge</td>
+                <td>₹0 (pickup) / ₹200 (local) / ₹500 (state)</td>
+            </tr>
+            <tr>
+                <td>Platform Fee</td>
+                <td>1% of subtotal (minimal to benefit farmers)</td>
+            </tr>
+            <tr>
+                <td>GST</td>
+                <td>₹0 (Agricultural exemption)</td>
+            </tr>
+            <tr>
+                <td><strong>Total</strong></td>
+                <td>Subtotal + Delivery + Platform Fee</td>
+            </tr>
+        </table>
+
+        <div class="success">
+            <strong>Farmer Payout:</strong> Subtotal - Platform Fee (99% goes to farmer!)
+        </div>
+    </div>
+
+    <h2>7. Security Features</h2>
+    <div class="section">
+        <table>
+            <tr>
+                <th>Feature</th>
+                <th>Technology</th>
+                <th>Purpose</th>
+            </tr>
+            <tr>
+                <td>Hash Chain</td>
+                <td>SHA-256</td>
+                <td>Tamper detection</td>
+            </tr>
+            <tr>
+                <td>Digital Signatures</td>
+                <td>ECDSA P-256</td>
+                <td>Non-repudiation</td>
+            </tr>
+            <tr>
+                <td>Buyer Privacy</td>
+                <td>Base64 Encoding</td>
+                <td>Encrypted buyer data</td>
+            </tr>
+            <tr>
+                <td>Key Management</td>
+                <td>Web Crypto API</td>
+                <td>Secure key storage</td>
+            </tr>
+            <tr>
+                <td>Canonical JSON</td>
+                <td>Sorted keys</td>
+                <td>Consistent hashing</td>
+            </tr>
+            <tr>
+                <td>Order Hash</td>
+                <td>SHA-256</td>
+                <td>Order integrity</td>
+            </tr>
+        </table>
+    </div>
+
+    <h2>8. Why Not a Real Blockchain?</h2>
+    <div class="section">
+        <div class="warning">
+            <h3>⚡ Design Decision: Local-First Architecture</h3>
+            <p>We chose a <strong>blockchain-like architecture</strong> over a real blockchain because:</p>
+        </div>
+
+        <table>
+            <tr>
+                <th>Real Blockchain</th>
+                <th>Our Approach</th>
+            </tr>
+            <tr>
+                <td>Requires internet connection</td>
+                <td>Works offline (localStorage)</td>
+            </tr>
+            <tr>
+                <td>Transaction fees (gas)</td>
+                <td>Free transactions</td>
+            </tr>
+            <tr>
+                <td>Slow confirmation (seconds/minutes)</td>
+                <td>Instant confirmation</td>
+            </tr>
+            <tr>
+                <td>Complex wallet setup</td>
+                <td>Automatic key generation</td>
+            </tr>
+            <tr>
+                <td>Heavy infrastructure</td>
+                <td>Zero infrastructure</td>
+            </tr>
+        </table>
+
+        <div class="highlight">
+            <strong>Future Migration Path:</strong> The data structure is designed to be easily migrated to a real
+            blockchain (Ethereum, Polygon, Hyperledger) when the platform scales. The hash-chain and signature format
+            are compatible.
+        </div>
+    </div>
+
+    <h2>9. File Structure</h2>
+    <div class="section">
+        <div class="code">
+            src/services/
+            ├── marketService.js # Blockchain-like ledger with hash chains
+            ├── keyManager.js # ECDSA key generation and signing
+            └── orderService.js # Order and payment management
+
+            src/pages/market/
+            ├── Marketplace.jsx # Browse listings
+            ├── CreateListing.jsx # Farmer creates signed listing
+            ├── ListingDetail.jsx # View & verify listing
+            ├── PlaceOrder.jsx # Buyer places order
+            ├── FarmerOrders.jsx # Farmer's incoming orders
+            ├── BuyerDashboard.jsx # Buyer's order history
+            ├── OrderTracking.jsx # Track delivery status
+            ├── PaymentHistory.jsx # Payment records
+            └── LedgerVerification.jsx # Verify any listing/hash
+        </div>
+    </div>
+
+    <h2>10. Summary: The Trust Model</h2>
+    <div class="section">
+        <div class="diagram"
+            style="background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); color: white; padding: 30px;">
+            <h3 style="color: white; margin-bottom: 20px;">🔒 Trust Without a Central Authority</h3>
+            <p style="max-width: 700px; margin: 0 auto;">
+                In traditional marketplaces, you trust the platform operator.<br>
+                In our system, you trust <strong>mathematics</strong>:
+            </p>
+            <div style="margin-top: 20px;">
+                <span class="flow-box" style="background: rgba(255,255,255,0.2); border-color: white;">Hashes prove data
+                    hasn't changed</span>
+                <span class="flow-box" style="background: rgba(255,255,255,0.2); border-color: white;">Signatures prove
+                    who created it</span>
+                <span class="flow-box" style="background: rgba(255,255,255,0.2); border-color: white;">Chain proves
+                    order of events</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>KisanMitra AI</strong> - Empowering Farmers with Trust & Transparency</p>
+        <p>Generated: December 2025 | For internal documentation purposes</p>
+    </footer>
+</body>
+
+</html>
