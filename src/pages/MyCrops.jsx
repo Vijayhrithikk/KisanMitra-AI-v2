@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
     Leaf, Plus, AlertTriangle, Calendar, MapPin, Droplets,
-    ChevronRight, RefreshCw, Loader2, Bell, Search, TrendingUp, Trash2
+    ChevronRight, RefreshCw, Loader2, Bell, Search, TrendingUp, Trash2, ArrowLeft
 } from 'lucide-react';
 import './MyCrops.css';
 
@@ -124,6 +124,9 @@ const MyCrops = () => {
         <div className="mycrops-container">
             {/* Header */}
             <div className="mycrops-header">
+                <button className="back-btn" onClick={() => navigate('/home')}>
+                    <ArrowLeft size={20} />
+                </button>
                 <div className="header-content">
                     <h1>{L.title}</h1>
                     <p>{L.subtitle}</p>
