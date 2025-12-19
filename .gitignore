@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files - NEVER commit these!
+.env
+.env.local
+.env.production
+backend/.env
+backend/ml_engine/.env
+
+# Secrets
+*.pem
+*.key
