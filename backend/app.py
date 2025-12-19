@@ -12,6 +12,20 @@ import uuid
 import tempfile # Added for /train functionality, though not used in the provided snippet, it's good practice for file handling.
 from PyPDF2 import PdfReader # For PDF processing without LangChain
 import re # For text cleaning/splitting
+import hmac
+import hashlib
+
+# Razorpay SDK
+try:
+    import razorpay
+    RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_RtY3DP4HEeNptd')
+    RAZORPAY_KEY_SECRET = os.environ.get('RAZORPAY_KEY_SECRET', 'f3rBpxA4k0eU5RRqsy2pnk88')
+    razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+    print("✅ Razorpay client initialized")
+except ImportError:
+    razorpay_client = None
+    RAZORPAY_KEY_ID = None
+    print("⚠️ Razorpay SDK not installed")
 
 app = Flask(__name__)
 CORS(app)
@@ -544,6 +558,131 @@ def get_all_listings_route():
     except Exception as e:
         print(f"❌ Error: {e}")
         return jsonify([])
+
+# ==================== RAZORPAY PAYMENT ENDPOINTS ====================
+
+@app.route('/api/payments/create-order', methods=['POST'])
+def create_razorpay_order():
+    """Create a Razorpay order for payment"""
+    if not razorpay_client:
+        return jsonify({'error': 'Payment gateway not configured'}), 500
+    
+    try:
+        data = request.json
+        amount = int(data.get('amount', 0))  # Amount in paise
+        currency = data.get('currency', 'INR')
+        receipt = data.get('receipt', f'order_{uuid.uuid4().hex[:8]}')
+        notes = data.get('notes', {})
+        
+        if amount <= 0:
+            return jsonify({'error': 'Invalid amount'}), 400
+        
+        # Create Razorpay order
+        order_data = {
+            'amount': amount,  # Amount in paise (100 paise = 1 INR)
+            'currency': currency,
+            'receipt': receipt,
+            'notes': notes
+        }
+        
+        razorpay_order = razorpay_client.order.create(data=order_data)
+        
+        return jsonify({
+            'success': True,
+            'order_id': razorpay_order['id'],
+            'amount': razorpay_order['amount'],
+            'currency': razorpay_order['currency'],
+            'key_id': RAZORPAY_KEY_ID
+        })
+        
+    except Exception as e:
+        print(f"❌ Razorpay order creation error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/payments/verify', methods=['POST'])
+def verify_razorpay_payment():
+    """Verify Razorpay payment signature"""
+    if not razorpay_client:
+        return jsonify({'error': 'Payment gateway not configured'}), 500
+    
+    try:
+        data = request.json
+        razorpay_order_id = data.get('razorpay_order_id')
+        razorpay_payment_id = data.get('razorpay_payment_id')
+        razorpay_signature = data.get('razorpay_signature')
+        order_id = data.get('order_id')  # Our internal order ID
+        order_type = data.get('order_type', 'marketplace')  # marketplace or rental
+        
+        if not all([razorpay_order_id, razorpay_payment_id, razorpay_signature]):
+            return jsonify({'error': 'Missing payment details'}), 400
+        
+        # Verify signature
+        msg = razorpay_order_id + "|" + razorpay_payment_id
+        generated_signature = hmac.new(
+            RAZORPAY_KEY_SECRET.encode(),
+            msg.encode(),
+            hashlib.sha256
+        ).hexdigest()
+        
+        if generated_signature != razorpay_signature:
+            return jsonify({'error': 'Invalid signature', 'verified': False}), 400
+        
+        # Payment verified - update order status in database
+        if order_id and order_type == 'marketplace':
+            orders_collection.update_one(
+                {'orderId': order_id},
+                {'$set': {
+                    'payment.status': 'PAID',
+                    'payment.razorpay_payment_id': razorpay_payment_id,
+                    'payment.razorpay_order_id': razorpay_order_id,
+                    'payment.paid_at': datetime.now().isoformat()
+                }}
+            )
+        elif order_id and order_type == 'rental':
+            rentals_collection.update_one(
+                {'rentalId': order_id},
+                {'$set': {
+                    'payment.status': 'PAID',
+                    'payment.razorpay_payment_id': razorpay_payment_id,
+                    'payment.razorpay_order_id': razorpay_order_id,
+                    'payment.paid_at': datetime.now().isoformat()
+                }}
+            )
+        
+        return jsonify({
+            'success': True,
+            'verified': True,
+            'payment_id': razorpay_payment_id,
+            'message': 'Payment verified successfully'
+        })
+        
+    except Exception as e:
+        print(f"❌ Payment verification error: {e}")
+        return jsonify({'error': str(e), 'verified': False}), 500
+
+
+@app.route('/api/payments/status/<payment_id>', methods=['GET'])
+def get_payment_status(payment_id):
+    """Get payment status from Razorpay"""
+    if not razorpay_client:
+        return jsonify({'error': 'Payment gateway not configured'}), 500
+    
+    try:
+        payment = razorpay_client.payment.fetch(payment_id)
+        return jsonify({
+            'success': True,
+            'payment': {
+                'id': payment['id'],
+                'amount': payment['amount'],
+                'currency': payment['currency'],
+                'status': payment['status'],
+                'method': payment.get('method'),
+                'captured': payment.get('captured', False)
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # ==================== RUN SERVER ====================
 

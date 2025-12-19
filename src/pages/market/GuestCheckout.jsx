@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { ArrowLeft, ShoppingBag, MapPin, Phone, User, Loader2, CheckCircle, Truck, Store, Building2, Factory, CreditCard } from 'lucide-react';
+import { initiatePayment } from '../../services/razorpayService';
 import './GuestCheckout.css';
 
 const API_BASE = import.meta.env.VITE_MARKET_API_URL || 'http://localhost:5000/api';
@@ -49,9 +50,8 @@ const GuestCheckout = () => {
 
     // Payment options
     const paymentOptions = [
-        { id: 'COD', label: 'Cash on Delivery', icon: '💵' },
-        { id: 'UPI', label: 'UPI', icon: '📱' },
-        { id: 'BANK_TRANSFER', label: 'Bank Transfer', icon: '🏦' }
+        { id: 'PAY_ONLINE', label: 'Pay Online', icon: '💳', description: 'Cards, UPI, NetBanking' },
+        { id: 'COD', label: 'Cash on Delivery', icon: '💵', description: 'Pay when you receive' }
     ];
 
     const L = {
@@ -130,7 +130,7 @@ const GuestCheckout = () => {
                 },
                 payment: {
                     method: paymentMethod,
-                    status: 'PENDING'
+                    status: paymentMethod === 'PAY_ONLINE' ? 'PENDING' : 'COD'
                 },
                 notes: formData.notes,
                 status: 'PLACED'
@@ -145,9 +145,35 @@ const GuestCheckout = () => {
             const result = await response.json();
 
             if (response.ok) {
-                setOrderId(result.orderId);
-                setOrderPlaced(true);
-                clearCart();
+                // If online payment selected, initiate Razorpay
+                if (paymentMethod === 'PAY_ONLINE') {
+                    try {
+                        const paymentResult = await initiatePayment(
+                            calculateTotal(),
+                            result.orderId,
+                            'marketplace',
+                            { name: formData.name, phone: formData.phone }
+                        );
+
+                        // Payment successful
+                        console.log('✅ Payment successful:', paymentResult);
+                        setOrderId(result.orderId);
+                        setOrderPlaced(true);
+                        clearCart();
+                    } catch (paymentError) {
+                        console.error('Payment error:', paymentError);
+                        alert(paymentError.message || 'Payment failed. Order saved as unpaid.');
+                        // Still show order but as unpaid
+                        setOrderId(result.orderId);
+                        setOrderPlaced(true);
+                        clearCart();
+                    }
+                } else {
+                    // COD - just show success
+                    setOrderId(result.orderId);
+                    setOrderPlaced(true);
+                    clearCart();
+                }
             } else {
                 alert('Order placement failed. Please try again.');
             }
